@@ -1,3 +1,4 @@
+package testkorkeat;
 Task 1: Widest Vertical Path
 โจทย์ย่อ
 
@@ -162,3 +163,77 @@ Task 2	CSV Remove NULL Row	Split → Skip row ที่มี "NULL"	O(N)
 Task 3	Remove One Character	ลบตัวแรกที่ s[i] > s[i+1] ไม่เจอให้ลบตัวท้าย	O(N)
 
 ทั้ง 3 ข้อเป็นแนวที่เจอได้บ่อยใน Codility และ Live Coding สำหรับตำแหน่ง Software Engineer / Senior Developer ครับ।
+
+
+Java 3 ข้อแนว Codility / Live Coding
+1. Missing Integer
+
+หาเลขบวกที่หายไปน้อยที่สุด
+
+import java.util.*;
+
+class Solution {
+    public int solution(int[] A) {
+        Set<Integer> set = new HashSet<>();
+
+        for (int n : A) {
+            if (n > 0) set.add(n);
+        }
+
+        int ans = 1;
+
+        while (set.contains(ans)) {
+            ans++;
+        }
+
+        return ans;
+    }
+}
+2. Brackets
+
+เช็กวงเล็บถูกต้องไหม
+
+import java.util.*;
+
+class Solution {
+    public int solution(String S) {
+        Stack<Character> stack = new Stack<>();
+
+        for (char c : S.toCharArray()) {
+            if (c == '(' || c == '[' || c == '{') {
+                stack.push(c);
+            } else {
+                if (stack.isEmpty()) return 0;
+
+                char top = stack.pop();
+
+                if (c == ')' && top != '(') return 0;
+                if (c == ']' && top != '[') return 0;
+                if (c == '}' && top != '{') return 0;
+            }
+        }
+
+        return stack.isEmpty() ? 1 : 0;
+    }
+}
+3. Max Profit
+
+ซื้อหุ้นวันหนึ่ง ขายวันถัดไป เพื่อกำไรสูงสุด
+
+class Solution {
+    public int solution(int[] A) {
+        if (A.length == 0) return 0;
+
+        int minPrice = A[0];
+        int maxProfit = 0;
+
+        for (int price : A) {
+            minPrice = Math.min(minPrice, price);
+            maxProfit = Math.max(maxProfit, price - minPrice);
+        }
+
+        return maxProfit;
+    }
+}
+
+จำ 3 pattern นี้ไว้: HashSet, Stack, Min/Max tracking เจอบ่อยมากครับ.

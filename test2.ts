@@ -85,3 +85,48 @@ export class PostsComponent implements OnInit {
 import { HttpClientModule } from '@angular/common/http';
 
 Codility Angular จะเน้น component, binding, click event, class binding, ngFor/ngIf, form input และ service/HTTP ครับ.
+
+จริง Angular อาจยากกว่านี้ได้เยอะครับ อันนี้ขอจัด Angular 3 ข้อ + Java 3 ข้อ แนว Codility/Live Coding
+
+Codility มีโจทย์ Angular practice แบบ Like Button จริง และแพลตฟอร์มใช้ทดสอบ coding/technical interview หลายภาษา
+
+Angular 3 ข้อที่ยากขึ้น
+1. Debounce Search + API
+search$ = new Subject<string>();
+results: any[] = [];
+
+ngOnInit() {
+  this.search$
+    .pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      switchMap(q => this.http.get<any[]>(`/api/users?q=${q}`))
+    )
+    .subscribe(res => this.results = res);
+}
+
+onSearch(value: string) {
+  this.search$.next(value);
+}
+2. Route Guard เช็ก Token
+export const authGuard: CanActivateFn = () => {
+  const router = inject(Router);
+  const token = localStorage.getItem('token');
+
+  if (token) return true;
+
+  router.navigate(['/login']);
+  return false;
+};
+3. HttpInterceptor ใส่ Bearer Token
+export const authInterceptor: HttpInterceptorFn = (req, next) => {
+  const token = localStorage.getItem('token');
+
+  const authReq = token
+    ? req.clone({
+        setHeaders: { Authorization: `Bearer ${token}` }
+      })
+    : req;
+
+  return next(authReq);
+};
